@@ -51,6 +51,13 @@ typedef rt_base_t rt_off_t;
 
 #define RT_NULL (0)
 
+struct rt_list_node
+{
+    struct rt_list_node *next;
+    struct rt_list_node *prev;
+};
+typedef struct rt_list_node rt_list_t;
+
 struct rt_thread
 {
     void *sp;
@@ -58,6 +65,7 @@ struct rt_thread
     void *parameter;
     void *stack_addr;
     rt_uint32_t stack_size;
+    rt_list_t tlist;
 };
 typedef struct rt_thread *rt_thread_t;
 

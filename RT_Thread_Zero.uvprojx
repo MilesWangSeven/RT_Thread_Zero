@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\rt-thread\user;.\rt-thread\include</IncludePath>
+              <IncludePath>.\rt-thread\user;.\rt-thread\include;.\rt-thread\3.0.3\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -399,6 +399,18 @@
         </Group>
         <Group>
           <GroupName>rtt/source</GroupName>
+          <Files>
+            <File>
+              <FileName>thread.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\rt-thread\3.0.3\src\thread.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtservice.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\rt-thread\3.0.3\include\rtservice.h</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>doc</GroupName>
