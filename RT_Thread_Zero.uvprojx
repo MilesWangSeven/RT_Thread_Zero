@@ -396,6 +396,13 @@
         </Group>
         <Group>
           <GroupName>rtt/ports</GroupName>
+          <Files>
+            <File>
+              <FileName>cpuport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\rt-thread\3.0.3\libcpu\arm\cortex-m3\cpuport.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>rtt/source</GroupName>
