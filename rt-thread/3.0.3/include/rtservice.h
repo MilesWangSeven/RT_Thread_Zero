@@ -4,6 +4,8 @@
 #include "rtconfig.h"
 #include "rtdef.h"
 
+extern rt_list_t rt_thread_priority_table[RT_THREAD_PRIORITY_MAX];
+
 rt_inline void rt_list_init(rt_list_t *l)
 {
     l->next  = l->prev = l;
@@ -34,6 +36,12 @@ rt_inline void rt_list_remove(rt_list_t *n)
 
     n->next = n->prev = n;
 }
+
+rt_err_t rt_thread_init(struct rt_thread *thread,
+                        void (*entry)(void *parameter),
+                        void *parameter,
+                        void *stack_start,
+                        rt_uint32_t stack_size);
 
 rt_uint8_t *rt_hw_stack_init(void *tentry,
                              void *parameter,
