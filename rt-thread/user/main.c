@@ -45,10 +45,7 @@ void flag2_thread_entry(void *p_arg)
 */
 int main(void)
 {
-	for (rt_uint32_t i = 0; i < RT_THREAD_PRIORITY_MAX; i++)
-	{
-		rt_list_init( &rt_thread_priority_table[i] );
-	}
+	rt_system_scheduler_init();
 	/* init thread */
 	rt_thread_init( &rt_flag1_thread,
 					flag1_thread_entry,
