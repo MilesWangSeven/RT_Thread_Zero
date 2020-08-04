@@ -3,6 +3,9 @@
 
 /* stack */
 #define RT_STACK_WATERMARK  0xdeadbeef 
+rt_uint32_t rt_interrupt_from_thread;
+rt_uint32_t rt_interrupt_to_thread;
+rt_uint32_t rt_thread_switch_interrupt_flag;
 struct exception_stack_frame
 {
     /* registers saved by hardware, when exception happend*/
