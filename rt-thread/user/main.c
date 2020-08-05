@@ -61,4 +61,6 @@ int main(void)
 					&rt_flag2_thread_stack[0],
 					sizeof(rt_flag2_thread_stack) );
 	rt_list_insert_before( &(rt_thread_priority_table[1]), &(rt_flag2_thread.tlist) );
+	
+	rt_system_scheduler_start();
 }
