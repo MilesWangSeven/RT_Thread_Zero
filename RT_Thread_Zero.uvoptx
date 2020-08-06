@@ -144,7 +144,7 @@
           <Type>0</Type>
           <LineNumber>65</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>1452</Address>
+          <Address>1512</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,6 +186,11 @@
           <count>5</count>
           <WinNumber>1</WinNumber>
           <ItemText>rt_thread_switch_interrupt_flag</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\RT_Thread_Zero\rt-thread/user/main.c\rt_flag1_thread_stack[443]</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
