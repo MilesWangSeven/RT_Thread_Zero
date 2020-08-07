@@ -37,3 +37,32 @@ void rt_system_scheduler_start(void)
 
     rt_hw_context_switch_to((rt_uint32_t)&to_thread->sp);
 }
+
+/* 系统调度 */
+void rt_schedule(void)
+{
+    struct rt_thread *to_thread;
+    struct rt_thread *from_thread;
+
+    /* 两个线程轮流切换 */
+    if (rt_current_thread == rt_list_entry(rt_thread_priority_table[0].next,
+                                           struct rt_thread,
+                                           tlist))
+    {
+        from_thread = rt_current_thread;
+        to_thread = rt_list_entry(rt_thread_priority_table[1].next,
+                                 struct rt_thread,
+                                 tlist);
+        rt_current_thread = to_thread;
+    }
+    else
+    {
+        from_thread = rt_current_thread;
+        to_thread = rt_list_entry(rt_thread_priority_table[0].next,
+                                  struct rt_thread,
+                                  tlist);
+        rt_current_thread = to_thread;
+    }
+
+    rt_hw_context_switch((rt_uint32_t)&from_thread->sp, (rt_uint32_t)&to_thread->sp);
+}

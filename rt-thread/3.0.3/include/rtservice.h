@@ -49,6 +49,7 @@ rt_uint8_t *rt_hw_stack_init(void *tentry,
 
 void rt_system_scheduler_init(void);
 void rt_system_scheduler_start(void);
+void rt_schedule(void);
 void rt_hw_context_switch_to(rt_uint32_t to);
-
+void rt_hw_context_switch(rt_uint32_t from, rt_uint32_t to);
 #endif

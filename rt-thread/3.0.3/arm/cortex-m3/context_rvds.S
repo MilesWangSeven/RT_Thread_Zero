@@ -142,5 +142,46 @@ pendsv_exit
     ; PendSV_Handler 子程序结束
     ENDP
 
+
+;/*
+; *---------------------------------------------------------------------
+; * void rt_hw_context_switch(rt_uint32_t from, rt_uint32_t to);
+; * r0 --> from
+; * r1 --> to
+; *---------------------------------------------------------------------
+; */
+rt_hw_context_switch PROC
+    EXPORT rt_hw_context_switch
+
+    ; 设置中断标记位 rt_thread_switch_interrupt_flag为1
+    ; 加载rt_thread_switch_interrupt_flag的地址到r2
+    LDR r2, =rt_thread_switch_interrupt_flag
+    ; 加载rt_thread_switch_interrupt_flag的值到r3
+    LDR r3, [r2]
+    CMP r3, #0
+    BNE _reswitch
+
+    ; 设置r3的值存储到rt_thread_switch_interrupt_flag, 即置1
+    MOV r3, #1
+    STR r3, [r2]
+
+    ; 设置rt_interrupt_from_thread的值
+    LDR r2, =rt_interrupt_from_thread
+    STR r0, [r2]
+
+_reswitch
+    ; 设置rt_interrupt_to_thread的值
+    LDR r2, =rt_interrupt_to_thread
+    STR r1, [r2]
+
+    LDR r0, =NVIC_INT_CTRL
+    LDR r1, =NVIC_PENDSVSET
+    STR r1, [r0]
+
+    ; 子程序返回
+    BX LR
+    ; 子程序结束
+    ENDP
+
         ALIGN 4
 	END
