@@ -1,5 +1,5 @@
-#include "rtdef.h"
 #include "rtconfig.h"
+#include "rtdef.h"
 #include "rtservice.h"
 
 rt_err_t rt_thread_init(struct rt_thread *thread,

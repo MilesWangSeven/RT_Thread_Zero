@@ -58,16 +58,99 @@ struct rt_list_node
 };
 typedef struct rt_list_node rt_list_t;
 
+enum rt_object_class_type
+{
+    RT_Object_Class_Thread = 0,     /* 对象是线程 */
+    RT_Object_Class_Semaphore,      /* 对象是信号量 */
+    RT_Object_Class_Mutex,          /* 对象是互斥量 */
+    RT_Object_Class_Event,          /* 对象是事件 */
+    RT_Object_Class_MailBox,        /* 对象是邮箱 */
+    RT_Object_Class_MessageQueue,   /* 对象是消息队列 */
+    RT_Object_Class_MemHeap,        /* 对象是内存堆 */
+    RT_Object_Class_MemPool,        /* 对象是内存池 */
+    RT_Object_Class_Device,         /* 对象是设备 */
+    RT_Object_Class_Timer,          /* 对象是定时器 */
+    RT_Object_Class_Module,         /* 对象是模块 */
+    RT_Object_Class_Unknown,        /* 对象是未知 */
+    RT_Object_Class_Static = 0x80   /* 对象是静态对象 */
+};
+
+struct rt_object
+{
+    char        name[RT_NAME_MAX];  /* 内核对象的名字 */
+    rt_uint8_t  type;               /* 内核对象的类型 */
+    rt_uint8_t  flag;               /* 内核对象的状态 */
+    rt_list_t   list;               /* 内核对象的列表节点 */
+};
+typedef struct rt_object *rt_object_t;  /* 内核对象数据类型重定义 */
+
+struct rt_object_information {
+    enum rt_object_class_type type;
+    rt_list_t object_list;
+    rt_size_t object_size;
+};
+
+enum rt_object_info_type
+{
+    RT_Object_Info_Thread = 0,
+#ifdef RT_USING_SEMAPHORE
+    RT_Object_Info_Semaphore,
+#endif
+#ifdef RT_USING_MUTEX
+    RT_Object_Info_Mutex,
+#endif
+#ifdef RT_USING_EVENT
+    RT_Object_Info_Event,
+#endif
+#ifdef RT_USING_MAILBOX
+    RT_Object_Info_MailBox,
+#endif
+#ifdef RT_USING_MESSAGEQUEUE
+    RT_Object_Info_MessageQueue,
+#endif
+#ifdef RT_USING_MEMHEAP
+    RT_Object_Info_MemHeap,
+#endif
+#ifdef RT_USING_MEMPOOL
+    RT_Object_Info_MemPool,
+#endif
+#ifdef RT_USING_DEVICE
+    RT_Object_Info_Device,
+#endif
+    RT_Object_Info_Timer,
+#ifdef RT_USING_MODULE
+    RT_Object_Info_Module,
+#endif
+    RT_Object_Info_Unknown
+};
+
 struct rt_thread
 {
+    /* rt 对象 */
+    char        name[RT_NAME_MAX];  /* 内核对象的名字 */
+    rt_uint8_t  type;               /* 内核对象的类型 */
+    rt_uint8_t  flag;               /* 内核对象的状态 */
+    rt_list_t   list;               /* 内核对象的列表节点 */
+
+    rt_list_t tlist;
     void *sp;
     void *entry;
     void *parameter;
     void *stack_addr;
-    rt_uint32_t stack_size;
-    rt_list_t tlist;
+    rt_uint32_t stack_size;    
 };
 typedef struct rt_thread *rt_thread_t;
+
+struct rt_timer
+{
+    /* rt 对象 */
+    char        name[RT_NAME_MAX];  /* 内核对象的名字 */
+    rt_uint8_t  type;               /* 内核对象的类型 */
+    rt_uint8_t  flag;               /* 内核对象的状态 */
+    rt_list_t   list;               /* 内核对象的列表节点 */
+    //TODO
+};
+typedef struct rt_timer *rt_timer_t;
 
 /* Error Code */
 #define RT_EOK          0   /* There is no error */
