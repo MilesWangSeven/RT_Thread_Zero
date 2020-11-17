@@ -1,5 +1,5 @@
-#include "rtconfig.h"
-#include "rtdef.h"
+#include "rtthread.h"
+#include "rthw.h"
 
 #define _OBJ_CONTAINER_LIST_INIT(c) \
 {&(rt_object_container[c].object_list), &(rt_object_container[c].object_list)}
@@ -102,3 +102,47 @@ rt_object_container[RT_Object_Info_Unknown] = {
 #endif
 };
 
+struct rt_object_information *
+rt_object_get_information(enum rt_object_class_type type)
+{
+    int index;
+    for(index = 0; index < RT_Object_Info_Unknown; index++)
+    {
+        if (rt_object_container[index].type  == type)
+        {
+            return &rt_object_container[index];
+        }
+    }
+    return RT_NULL;
+}
+
+/**
+ * 该函数将初始化对象并将对象添加到对象容器中
+ * 
+ * @param object 要初始化的对象
+ * @param type 对象的类型
+ * @param name 对象的名字，在整个系统中，对象的名字必须是唯一的
+ */
+void rt_object_init(struct rt_object *object, enum rt_object_class_type type, const char *name)
+{
+    register rt_base_t temp;
+    struct rt_object_information *information;
+
+    /* 获取对象信息，即从容器里拿到对应对象列表头指针 */
+    information = rt_object_get_information(type);
+
+    /* 设置对象类型为静态 */
+    object->type = type | RT_Object_Class_Static;
+
+    /* 拷贝名字 */
+    rt_strncpy(object->name, name, RT_NAME_MAX);
+
+    /* 关中断 */
+    temp = rt_hw_interrupt_disable();
+
+    /* 将对象插入到容器的对应列表中，不同类型的对象所在的列表不一样 */
+    rt_list_insert_after(&(information->object_list), &(object->list));
+
+    /* 使能中断 */
+    rt_hw_interrupt_enable(temp);
+}

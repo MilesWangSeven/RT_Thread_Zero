@@ -8,14 +8,14 @@
 
 #define RT_THREAD_PRIORITY_MAX 32
 
-#define RT_USING_SEMAPHORE
-#define RT_USING_MUTEX
-#define RT_USING_EVENT
-#define RT_USING_MAILBOX
-#define RT_USING_MESSAGEQUEUE
-#define RT_USING_MEMHEAP
-#define RT_USING_MEMPOOL
-#define RT_USING_DEVICE
-#define RT_USING_MODULE
+// #define RT_USING_SEMAPHORE
+// #define RT_USING_MUTEX
+// #define RT_USING_EVENT
+// #define RT_USING_MAILBOX
+// #define RT_USING_MESSAGEQUEUE
+// #define RT_USING_MEMHEAP
+// #define RT_USING_MEMPOOL
+// #define RT_USING_DEVICE
+// #define RT_USING_MODULE
 
 #endif /* __RTTHREAD_CFG_H__ */

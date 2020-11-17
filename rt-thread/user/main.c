@@ -26,6 +26,7 @@ int main(void)
 	rt_system_scheduler_init();
 	/* init thread */
 	rt_thread_init( &rt_flag1_thread,
+					"flag1",
 					flag1_thread_entry,
 					RT_NULL,
 					&rt_flag1_thread_stack[0],
@@ -34,6 +35,7 @@ int main(void)
 
 	/* init thread */
 	rt_thread_init( &rt_flag2_thread,
+					"flag2",
 					flag2_thread_entry,
 					RT_NULL,
 					&rt_flag2_thread_stack[0],
