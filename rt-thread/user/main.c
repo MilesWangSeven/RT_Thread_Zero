@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include "ARMCM3.h"
+#include "rthw.h"
 
 rt_uint8_t flag1;
 rt_uint8_t flag2;
@@ -23,7 +24,17 @@ void delay(rt_uint32_t count);
 */
 int main(void)
 {
+	/* 关中断 */
+	rt_hw_interrupt_disable();
+
+	/* SysTick 中断频率设置 */
+	SysTick_Config( SystemCoreClock / RT_TICK_PER_SECOND );
+
 	rt_system_scheduler_init();
+
+	/* 初始化空闲线程 */
+	rt_thread_idle_init();
+
 	/* init thread */
 	rt_thread_init( &rt_flag1_thread,
 					"flag1",
@@ -56,6 +67,7 @@ void flag1_thread_entry(void *p_arg)
 {
 	for ( ;; )
 	{
+#if 0
 		flag1 = 1;
 		delay(100);
 		flag1 = 0;
@@ -63,6 +75,12 @@ void flag1_thread_entry(void *p_arg)
 		
 		/* switch thread manually */
 		rt_schedule();
+#else
+		flag1 = 1;
+		rt_thread_delay(2);
+		flag1 = 0;
+		rt_thread_delay(2);
+#endif
 	}
 }
 
@@ -71,6 +89,7 @@ void flag2_thread_entry(void *p_arg)
 {
 	for ( ;; )
 	{
+#if 0
 		flag2 = 1;
 		delay(100);
 		flag2 = 0;
@@ -78,5 +97,23 @@ void flag2_thread_entry(void *p_arg)
 		
 		/* switch thread manually */
 		rt_schedule();
+#else
+		flag2 = 1;
+		rt_thread_delay(2);
+		flag2 = 0;
+		rt_thread_delay(2);
+#endif
 	}
+}
+
+void SysTick_Handler(void)
+{
+	/* 进入中断 */
+	rt_interrupt_enter();
+
+	/* 时基更新 */
+	rt_tick_increase();
+
+	/* 离开中断 */
+	rt_interrupt_leave();
 }

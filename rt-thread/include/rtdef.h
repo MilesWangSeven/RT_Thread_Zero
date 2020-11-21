@@ -137,7 +137,8 @@ struct rt_thread
     void *entry;
     void *parameter;
     void *stack_addr;
-    rt_uint32_t stack_size;    
+    rt_uint32_t stack_size;
+    rt_ubase_t remaining_tick;
 };
 typedef struct rt_thread *rt_thread_t;
 
@@ -164,5 +165,11 @@ typedef struct rt_timer *rt_timer_t;
 #define RT_EIO          8   /* IO error */
 #define RT_EINTR        9   /* Interrupted system call */
 #define RT_EINVAL       10  /* Invalid argument */
+
+#define rt_container_of(ptr, type, member) \
+    ((type*)((char *)ptr - (rt_uint32_t)&((type *)0)->member))
+
+#define rt_list_entry(node, type, member) \
+    rt_container_of(node, type, member)
 
 #endif /* __RT_DEF_H__ */

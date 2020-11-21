@@ -1,5 +1,7 @@
 #include "rtthread.h"
 
+extern struct rt_thread *rt_current_thread;
+
 rt_err_t rt_thread_init(struct rt_thread *thread,
                         const char *name,
                         void (*entry)(void *parameter),
@@ -25,3 +27,17 @@ rt_err_t rt_thread_init(struct rt_thread *thread,
                         (void *)((char *)thread->stack_addr + thread->stack_size -4));
     return RT_EOK;
 };
+
+void rt_thread_delay(rt_tick_t tick)
+{
+    struct rt_thread *thread;
+    
+    /* 获取当前线程的线程控制块 */
+    thread = rt_current_thread;
+
+    /* 设置延时时间 */
+    thread->remaining_tick = tick;
+
+    /* 进行系统调度 */
+    rt_schedule();
+}

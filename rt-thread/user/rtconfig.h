@@ -8,6 +8,8 @@
 
 #define RT_THREAD_PRIORITY_MAX 32
 
+#define RT_TICK_PER_SECOND 100
+
 // #define RT_USING_SEMAPHORE
 // #define RT_USING_MUTEX
 // #define RT_USING_EVENT
