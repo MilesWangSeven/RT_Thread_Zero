@@ -7,7 +7,8 @@ rt_err_t rt_thread_init(struct rt_thread *thread,
                         void (*entry)(void *parameter),
                         void *parameter,
                         void *stack_start,
-                        rt_uint32_t stack_size)
+                        rt_uint32_t stack_size,
+                        rt_uint8_t priority)
 {
     /* 线程对象初始化 */
     /* 线程结构体开头的4个成员就是rt_object_t成员 */
@@ -25,6 +26,15 @@ rt_err_t rt_thread_init(struct rt_thread *thread,
     thread->sp = (void *)rt_hw_stack_init(thread->entry,
                                           thread->parameter,
                         (void *)((char *)thread->stack_addr + thread->stack_size -4));
+
+    thread->init_priority = priority;
+    thread->current_priority = priority;
+    thread->number_mask = 0;
+
+    /* 错误码和状态 */
+    thread->error = RT_EOK;
+    thread->stat = RT_THREAD_INIT;
+    
     return RT_EOK;
 };
 

@@ -37,12 +37,18 @@ rt_inline void rt_list_remove(rt_list_t *n)
     n->next = n->prev = n;
 }
 
+rt_inline int rt_list_isempty(rt_list_t *l)
+{
+    return l->next == l;
+}
+
 rt_err_t rt_thread_init(struct rt_thread *thread,
                         const char *name,
                         void (*entry)(void *parameter),
                         void *parameter,
                         void *stack_start,
-                        rt_uint32_t stack_size);
+                        rt_uint32_t stack_size,
+                        rt_uint8_t priority);
 
 rt_uint8_t *rt_hw_stack_init(void *tentry,
                              void *parameter,
