@@ -38,8 +38,10 @@ rt_err_t rt_thread_init(struct rt_thread *thread,
     return RT_EOK;
 };
 
+extern rt_uint32_t rt_thread_ready_priority_group;
 void rt_thread_delay(rt_tick_t tick)
 {
+#if 0
     struct rt_thread *thread;
     
     /* 获取当前线程的线程控制块 */
@@ -50,4 +52,86 @@ void rt_thread_delay(rt_tick_t tick)
 
     /* 进行系统调度 */
     rt_schedule();
+#else
+    register rt_base_t temp;
+    struct rt_thread *thread;
+
+    /* 失能中断 */
+    temp = rt_hw_interrupt_disable();
+
+    thread = rt_current_thread;
+    thread->remaining_tick = tick;
+
+    /* 改变线程状态 */
+    thread->stat = RT_THREAD_SUSPEND;
+    rt_thread_ready_priority_group &= ~thread->number_mask;
+    // rt_schedule_remove_thread(thread);
+
+    /* 使能中断 */
+    rt_hw_interrupt_enable(temp);
+
+    /* 进行系统调度 */
+    rt_schedule();
+#endif
+}
+
+/**
+ * 启动一个线程并将其放到系统的就绪列表中
+ * 
+ * @param thread 待启动的线程
+ * 
+ * @return 操作状态 , RT_EOK on OK, -RT_ERROR on error
+ */
+rt_err_t rt_thread_startup(rt_thread_t thread)
+{
+    /* 设置当前优先级为初始优先级 */
+    thread->current_priority = thread->init_priority;
+    thread->number_mask = 1L << thread->current_priority;
+
+    /* 改变线程的状态为挂起状态 */
+    thread->stat = RT_THREAD_SUSPEND;
+    /* 然后恢复线程 */
+    rt_thread_resume(thread);
+
+    if (rt_thread_self() != RT_NULL)
+    {
+        /* 系统调度 */
+        rt_schedule();
+    }
+    return RT_EOK;
+}
+
+/**
+ * 该函数用于恢复一个线程然后将其放到就绪列表
+ * 
+ * @param thread 需要恢复的线程
+ * 
+ * @return 操作状态， RT_EOK on OK, -RT_ERROR on ERROR
+ */
+rt_err_t rt_thread_resume(rt_thread_t thread)
+{
+    register rt_base_t temp;
+    if ((thread->stat & RT_THREAD_STAT_MASK) != RT_THREAD_SUSPEND)
+    {
+        return -RT_ERROR;
+    }
+
+    /* 关中断 */
+    temp = rt_hw_interrupt_disable();
+
+    /* 从挂起队列移除 */
+    rt_list_remove(&(thread->list));
+
+    /* 开中断 */
+    rt_hw_interrupt_enable(temp);
+
+    /* 插入就绪列表 */
+    rt_schedule_insert_thread(thread);
+
+    return RT_EOK;
+}
+
+rt_thread_t rt_thread_self(void)
+{
+    return rt_current_thread;
 }

@@ -42,7 +42,8 @@ int main(void)
 					RT_NULL,
 					&rt_flag1_thread_stack[0],
 					sizeof(rt_flag1_thread_stack) );
-	rt_list_insert_before( &(rt_thread_priority_table[0]), &(rt_flag1_thread.tlist) );
+	// rt_list_insert_before( &(rt_thread_priority_table[0]), &(rt_flag1_thread.tlist) );
+	rt_thread_start_thread(&rt_flag1_thread);
 
 	/* init thread */
 	rt_thread_init( &rt_flag2_thread,
@@ -51,7 +52,8 @@ int main(void)
 					RT_NULL,
 					&rt_flag2_thread_stack[0],
 					sizeof(rt_flag2_thread_stack) );
-	rt_list_insert_before( &(rt_thread_priority_table[1]), &(rt_flag2_thread.tlist) );
+	// rt_list_insert_before( &(rt_thread_priority_table[1]), &(rt_flag2_thread.tlist) );
+	rt_thread_start_thread(&rt_flag2_thread);
 	
 	rt_system_scheduler_start();
 }

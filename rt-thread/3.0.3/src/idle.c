@@ -30,6 +30,7 @@ void rt_thread_idle_init(void)
                    &rt_thread_stack[0],
                    sizeof(rt_thread_stack));
     /* 将线程插入就绪列表 */
-    rt_list_insert_before(&(rt_thread_priority_table[RT_THREAD_PRIORITY_MAX-1]),
-                            &(idle.tlist));
+    // rt_list_insert_before(&(rt_thread_priority_table[RT_THREAD_PRIORITY_MAX-1]),
+    //                         &(idle.tlist));
+    rt_thread_startup(&idle);
 }
