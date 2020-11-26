@@ -1,4 +1,5 @@
 #include "rtthread.h"
+#include "rthw.h"
 
 extern struct rt_thread *rt_current_thread;
 

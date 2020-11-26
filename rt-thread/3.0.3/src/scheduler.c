@@ -1,6 +1,7 @@
 #include "rtconfig.h"
 #include "rtdef.h"
 #include "rtservice.h"
+#include "rthw.h"
 
 extern struct rt_thread idle;
 extern struct rt_thread rt_flag1_thread;
@@ -167,10 +168,10 @@ void rt_schedule(void)
     level = rt_hw_interrupt_disable();
 
     /* 获取就绪的最高优先级 */
-    highest_ready_priority = __rt_ffs(rt_thread_ready_priority_group);
+    highest_ready_priority = __rt_ffs(rt_thread_ready_priority_group) - 1;
 
     /* 获取就绪的最高优先级对应的线程控制块 */
-    to_thread = rt_list_entry(&rt_thread_priority_table[highest_ready_priority],
+    to_thread = rt_list_entry(rt_thread_priority_table[highest_ready_priority].next,
                               struct rt_thread,
                               tlist);
     
@@ -180,8 +181,8 @@ void rt_schedule(void)
         rt_current_priority = (rt_uint8_t)highest_ready_priority;
         from_thread = rt_current_thread;
         rt_current_thread = to_thread;
-        rt_hw_context_switch((rt_uint32_t)from_thread->sp,
-                             (rt_uint32_t)to_thread->sp);
+        rt_hw_context_switch((rt_uint32_t)&from_thread->sp,
+                             (rt_uint32_t)&to_thread->sp);
 
         /* 开中断 */
         rt_hw_interrupt_enable(level);

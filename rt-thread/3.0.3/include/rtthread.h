@@ -16,6 +16,7 @@ void rt_thread_idle_init(void);
 
 void rt_thread_delay(rt_tick_t tick);
 rt_err_t rt_thread_startup(rt_thread_t thread);
+rt_err_t rt_thread_resume(rt_thread_t thread);
 rt_thread_t rt_thread_self(void);
 
 #endif
