@@ -124,6 +124,29 @@ enum rt_object_info_type
     RT_Object_Info_Unknown
 };
 
+#define RT_TIMER_SKIP_LIST_LEVEL 1
+
+#define RT_TIMER_FLAG_DEACTIVATED 0x0
+#define RT_TIMER_FLAG_ACTIVATED 0x1
+#define RT_TIMER_FLAG_ONE_SHOT 0x2
+#define RT_TIMER_FLAG_PERIODIC 0x3
+#define RT_TIMER_FLAG_HARD_TIMER 0x0
+#define RT_TIMER_FLAG_SOFT_TIMER 0x4
+
+struct rt_timer
+{
+    struct rt_object parent;        /* 从 rt_object 继承 */
+
+    rt_list_t row[RT_TIMER_SKIP_LIST_LEVEL];    /* 节点 */
+
+    void (*timeout_func)(void *parameter);      /* 超时函数 */
+    void *parameter;                            /* 超时函数形参 */
+
+    rt_tick_t init_tick;                        /* 定时器实际需要延时的时间 */
+    rt_tick_t timeout_tick;                     /* 定时器实际超时时的系统节拍数 */
+};
+typedef struct rt_timer *rt_timer_t;
+
 struct rt_thread
 {
     /* rt 对象 */
@@ -146,19 +169,21 @@ struct rt_thread
     
     rt_err_t error;                 /* 错误码 */
     rt_uint8_t stat;                /* 线程的状态 */
+
+    struct rt_timer thread_timer;   /* 内置的线程定时器 */
 };
 typedef struct rt_thread *rt_thread_t;
 
-struct rt_timer
-{
-    /* rt 对象 */
-    char        name[RT_NAME_MAX];  /* 内核对象的名字 */
-    rt_uint8_t  type;               /* 内核对象的类型 */
-    rt_uint8_t  flag;               /* 内核对象的状态 */
-    rt_list_t   list;               /* 内核对象的列表节点 */
-    //TODO
-};
-typedef struct rt_timer *rt_timer_t;
+// struct rt_timer
+// {
+//     /* rt 对象 */
+//     char        name[RT_NAME_MAX];  /* 内核对象的名字 */
+//     rt_uint8_t  type;               /* 内核对象的类型 */
+//     rt_uint8_t  flag;               /* 内核对象的状态 */
+//     rt_list_t   list;               /* 内核对象的列表节点 */
+//     //TODO
+// };
+// typedef struct rt_timer *rt_timer_t;
 
 /* Error Code */
 #define RT_EOK          0   /* There is no error */
