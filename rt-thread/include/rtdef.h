@@ -128,10 +128,15 @@ enum rt_object_info_type
 
 #define RT_TIMER_FLAG_DEACTIVATED 0x0
 #define RT_TIMER_FLAG_ACTIVATED 0x1
-#define RT_TIMER_FLAG_ONE_SHOT 0x2
-#define RT_TIMER_FLAG_PERIODIC 0x3
+#define RT_TIMER_FLAG_ONE_SHOT 0x0
+#define RT_TIMER_FLAG_PERIODIC 0x2
 #define RT_TIMER_FLAG_HARD_TIMER 0x0
 #define RT_TIMER_FLAG_SOFT_TIMER 0x4
+
+#define RT_TIMER_CTRL_SET_TIME 0x0      /* 设置定时器定时时间 */
+#define RT_TIMER_CTRL_GET_TIME 0x1      /* 获取定时器定时时间 */
+#define	RT_TIMER_CTRL_SET_ONESHOT 0x2      /* 修改定时器为一次定时 */
+#define RT_TIMER_CTRL_SET_PERIODIC 0x3      /* 修改定时器为周期定时 */
 
 struct rt_timer
 {

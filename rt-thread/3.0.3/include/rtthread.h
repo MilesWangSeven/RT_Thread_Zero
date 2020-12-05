@@ -19,4 +19,21 @@ rt_err_t rt_thread_startup(rt_thread_t thread);
 rt_err_t rt_thread_resume(rt_thread_t thread);
 rt_thread_t rt_thread_self(void);
 
+void rt_system_timer_init(void);
+void rt_timer_init(rt_timer_t timer,
+                   const char *name,
+                   void (*timeout)(void *parameter),
+                   void *parameter,
+                   rt_tick_t time,
+                   rt_uint8_t flag);
+rt_inline void _rt_timer_remove(rt_timer_t timer)
+{
+    int i;
+
+    for (i = 0; i < RT_TIMER_SKIP_LIST_LEVEL; i++)
+    {
+        rt_list_remove(&timer->row[i]);
+    }
+}
+
 #endif
