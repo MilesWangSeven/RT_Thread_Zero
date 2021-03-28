@@ -29,6 +29,11 @@ typedef rt_base_t rt_off_t;
 /* boolean data type */
 #define RT_TRUE 1
 #define RT_FALSE 0
+
+#define RT_UINT8_MAX                    0xff            /**< Maxium number of UINT8 */
+#define RT_UINT16_MAX                   0xffff          /**< Maxium number of UINT16 */
+#define RT_UINT32_MAX                   0xffffffff      /**< Maxium number of UINT32 */
+#define RT_TICK_MAX                     RT_UINT32_MAX   /**< Maxium number of tick */
  
 #ifdef __CC_ARM
 #define rt_inline static __inline
@@ -125,6 +130,7 @@ enum rt_object_info_type
 };
 
 #define RT_TIMER_SKIP_LIST_LEVEL 1
+#define RT_TIMER_SKIP_LIST_MASK         0x3
 
 #define RT_TIMER_FLAG_DEACTIVATED 0x0
 #define RT_TIMER_FLAG_ACTIVATED 0x1

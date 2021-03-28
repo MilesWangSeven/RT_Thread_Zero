@@ -51,3 +51,8 @@ void rt_tick_increase(void)
     rt_schedule();
 #endif
 }
+
+rt_tick_t rt_tick_get(void)
+{
+    return rt_tick;
+}

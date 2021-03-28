@@ -8,6 +8,7 @@
 char *rt_strncpy(char *dst, const char *src, rt_ubase_t n);
 void rt_object_init(struct rt_object *object, enum rt_object_class_type type, const char *name);
 void rt_tick_increase(void);
+rt_tick_t rt_tick_get(void);
 
 void rt_interrupt_enter(void);
 void rt_interrupt_leave(void);
