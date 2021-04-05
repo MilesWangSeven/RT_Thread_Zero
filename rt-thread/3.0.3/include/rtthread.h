@@ -36,5 +36,7 @@ rt_inline void _rt_timer_remove(rt_timer_t timer)
         rt_list_remove(&timer->row[i]);
     }
 }
+void rt_timer_check(void);
+void rt_thread_timeout(void *parameter);
 
 #endif

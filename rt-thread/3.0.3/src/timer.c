@@ -231,3 +231,88 @@ rt_err_t rt_timer_start(rt_timer_t timer)
 
     return -RT_EOK;
 }
+
+/**
+ * 该函数用于扫描系统定时器列表，当有超时事件发生时
+ * 就调用对应的超时函数
+ *
+ * @note 该函数在操作系统定时器中断中被调用
+ */
+void rt_timer_check(void)
+{
+    struct rt_timer *t;
+    rt_tick_t current_tick;
+    register rt_base_t level;
+
+    /* 获取系统时基计数器rt_tick的值 */
+    current_tick = rt_tick_get();
+
+    /* 关中断 */
+    level = rt_hw_interrupt_disable();
+
+    /* 系统定时器列表不为空，则扫描定时器列表 */
+    while (!rt_list_isempty(&rt_timer_list[RT_TIMER_SKIP_LIST_LEVEL - 1]))
+    {
+        /* 获取第一个节点定时器的地址 */
+        t = rt_list_entry(rt_timer_list[RT_TIMER_SKIP_LIST_LEVEL - 1].next,
+                          struct rt_timer,
+                          row[RT_TIMER_SKIP_LIST_LEVEL - 1]);
+        if ((current_tick - t->timeout_tick) < RT_TICK_MAX / 2)
+        {
+            /* 先将定时器从系统时钟列表移除 */
+            _rt_timer_remove(t);
+
+            /* 调用超时函数 */
+            t->timeout_func(t->parameter);
+
+            /* 重新获取 rt_tick */
+            current_tick = rt_tick_get();
+
+            /* 周期定时器 */
+            if ((t->parent.flag & RT_TIMER_FLAG_PERIODIC) &&
+                (t->parent.flag & RT_TIMER_FLAG_ACTIVATED))
+            {
+                /* 启动定时器 */
+                t->parent.flag &= ~RT_TIMER_FLAG_ACTIVATED;
+                rt_timer_start(t);
+            }
+            /* 单次定时器 */
+            else
+            {
+                /* 停止定时器 */
+                t->parent.flag &= ~RT_TIMER_FLAG_ACTIVATED;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    /* 开中断 */
+    rt_hw_interrupt_enable(level);
+}
+
+/**
+ * 线程超时函数
+ * 当线程延时到期或等待的资源可用或者超时时，该函数会被调用
+ *
+ * @param parameter 超时函数的形参
+ */
+void rt_thread_timeout(void *parameter)
+{
+    struct rt_thread *thread;
+    thread = (struct rt_thread *)parameter;
+
+    /* 设置错误代码为超时 */
+    thread->error = -RT_ETIMEOUT;
+
+    /* 将线程从挂起列表中删除 */
+    rt_list_remove(&(thread->tlist));
+
+    /* 将线程插入到就绪列表 */
+    rt_schedule_insert_thread(thread);
+
+    /* 系统调度 */
+    rt_schedule();
+}
