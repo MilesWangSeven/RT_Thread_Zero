@@ -50,6 +50,8 @@ rt_err_t rt_thread_init(struct rt_thread *thread,
                         rt_uint32_t stack_size,
                         rt_uint8_t priority);
 
+rt_err_t rt_thread_sleep(rt_tick_t tick);
+
 rt_uint8_t *rt_hw_stack_init(void *tentry,
                              void *parameter,
                              rt_uint8_t *stack_addr);

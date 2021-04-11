@@ -15,8 +15,9 @@ void rt_interrupt_leave(void);
 
 void rt_thread_idle_init(void);
 
-void rt_thread_delay(rt_tick_t tick);
+rt_err_t rt_thread_delay(rt_tick_t tick);
 rt_err_t rt_thread_startup(rt_thread_t thread);
+rt_err_t rt_thread_suspend(rt_thread_t thread);
 rt_err_t rt_thread_resume(rt_thread_t thread);
 rt_thread_t rt_thread_self(void);
 
@@ -27,6 +28,9 @@ void rt_timer_init(rt_timer_t timer,
                    void *parameter,
                    rt_tick_t time,
                    rt_uint8_t flag);
+rt_err_t rt_timer_start(rt_timer_t timer);
+rt_err_t rt_timer_stop(rt_timer_t timer);
+rt_err_t rt_timer_control(rt_timer_t timer, int cmd, void *arg);
 rt_inline void _rt_timer_remove(rt_timer_t timer)
 {
     int i;

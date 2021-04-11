@@ -61,7 +61,7 @@ void rt_timer_init(rt_timer_t timer,
                    rt_tick_t time,
                    rt_uint8_t flag)
 {
-    rt_object_init((rt_object_t)&timer, RT_Object_Class_Timer, name);
+    rt_object_init((rt_object_t)timer, RT_Object_Class_Timer, name);
 
     _rt_timer_init(timer, timeout, parameter, time, flag);
 }
